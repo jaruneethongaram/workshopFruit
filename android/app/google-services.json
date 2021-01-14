@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "597549745653",
+    "project_id": "teachma-ce2ca",
+    "storage_bucket": "teachma-ce2ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597549745653:android:6c4ee96611587f718f4cbc",
+        "android_client_info": {
+          "package_name": "rus.isbc.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597549745653-pnanjrtj8i50vr5e115vme7nva4hqml8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2x1QUK1QqsNyM9lx-Mp0FeDEAl-V85a4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597549745653-pnanjrtj8i50vr5e115vme7nva4hqml8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

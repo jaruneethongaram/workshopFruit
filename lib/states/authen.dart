@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firstapp/utility/dialog.dart';
 import 'package:firstapp/utility/my_style.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,7 @@ class Authen extends StatefulWidget {
 class _AuthenState extends State<Authen> {
   @override
   bool statusRedEye = true;
+  String user, password;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +20,9 @@ class _AuthenState extends State<Authen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white, MyStyle().darkColor],begin: Alignment(0.0,0.0),end: Alignment(1,1),
+            colors: [Colors.white, MyStyle().lightcolor],
+            begin: Alignment(0, 0),
+            end: Alignment(0, 1),
           ),
           // gradient: RadialGradient(radius: 1.0,
           //   colors: [Colors.white, MyStyle().darkColor],
@@ -30,15 +36,7 @@ class _AuthenState extends State<Authen> {
               buildAppName(),
               buildUser(),
               buildPassword(),
-              Container(
-                margin: EdgeInsets.only(top: 16),
-                width: 250,
-                //Container(width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Login'),
-                ),
-              ),
+              buildLogin(),
             ],
           ),
         ),
@@ -46,9 +44,27 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+  Container buildLogin() {
+    return Container(
+      margin: EdgeInsets.only(top: 16),
+      width: 250,
+      //Container(width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+        onPressed: () {
+          if ((user?.isEmpty ?? true) || (password?.isEmpty ?? true)) {
+            normalDialog(context, 'Have Space ? Please Fill All Blank');
+          } else {
+            checkAuthen();
+          }
+        },
+        child: Text('LOGIN'),
+      ),
+    );
+  }
+
   TextButton buildTextButton() => TextButton(
         onPressed: () => Navigator.pushNamed(context, '/register'),
-        child: Text("New Register"),
+        child: Text("NEW REGISTER"),
       );
 
   Container buildUser() {
@@ -56,6 +72,8 @@ class _AuthenState extends State<Authen> {
       margin: EdgeInsets.only(top: 16),
       width: 250,
       child: TextField(
+        onChanged: (value) => user = value.trim(),
+        keyboardType: TextInputType.emailAddress,
         style: TextStyle(color: MyStyle().darkColor),
         decoration: InputDecoration(
             labelStyle: TextStyle(color: MyStyle().darkColor),
@@ -68,7 +86,7 @@ class _AuthenState extends State<Authen> {
               borderSide: BorderSide(color: MyStyle().darkColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: MyStyle().lightcolor),
+              borderSide: BorderSide(color: MyStyle().primaryColor),
             )),
       ),
     );
@@ -79,6 +97,7 @@ class _AuthenState extends State<Authen> {
       margin: EdgeInsets.only(top: 16),
       width: 250,
       child: TextField(
+        onChanged: (value) => password = value.trim(),
         obscureText: statusRedEye,
         style: TextStyle(color: MyStyle().darkColor),
         decoration: InputDecoration(
@@ -96,7 +115,8 @@ class _AuthenState extends State<Authen> {
               Icons.lock,
               color: MyStyle().darkColor,
             ),
-            labelText: 'Password',
+            //labelText: 'Password',
+            hintText: 'Password',
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: MyStyle().darkColor),
             ),
@@ -108,7 +128,7 @@ class _AuthenState extends State<Authen> {
   }
 
   Text buildAppName() => Text(
-        'Flutter Learning',
+        'FLUTTER LEARNING',
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w500,
@@ -119,8 +139,19 @@ class _AuthenState extends State<Authen> {
 
   Container buildLogo() {
     return Container(
-      width: 120.0,
-      child: Image.asset('images/logo1.png'),
+      width: 150.0,
+      child: Image.asset('images/logo2.png'),
     );
+  }
+
+  Future<Null> checkAuthen() async {
+    await Firebase.initializeApp().then((value) async {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: user, password: password)
+          .then((value) => Navigator.pushNamedAndRemoveUntil(context, '/myService', (route) => false))
+          .catchError((value) {
+        normalDialog(context, value.message);
+      });
+    });
   }
 }
